@@ -1,4 +1,4 @@
-
+-- Variables
 local AimbotEnabled = false
 local Target = nil
 local VirtualUser = game:GetService("VirtualUser")
@@ -9,7 +9,7 @@ local Mouse = LocalPlayer:GetMouse()
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
-
+-- Create UI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.CoreGui
 ScreenGui.Name = "AimbotUI"
@@ -18,7 +18,7 @@ local Frame = Instance.new("Frame")
 Frame.Parent = ScreenGui
 Frame.Size = UDim2.new(0, 200, 0, 100)
 Frame.Position = UDim2.new(0.5, -100, 0.5, -50)
-Frame.BackgroundColor3 = Color3.fromRGB(138, 43, 226) 
+Frame.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Màu tím
 Frame.BorderSizePixel = 0
 Frame.Active = true
 Frame.Draggable = true
@@ -27,7 +27,7 @@ local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = Frame
 ToggleButton.Size = UDim2.new(0, 180, 0, 50)
 ToggleButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(147, 112, 219) 
+ToggleButton.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Màu tím nhạt cho nút
 ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ToggleButton.Text = "Bật Aimbot"
 ToggleButton.Font = Enum.Font.GothamBold
@@ -43,10 +43,10 @@ StatusLabel.Text = "Trạng thái: Tắt"
 StatusLabel.Font = Enum.Font.Gotham
 StatusLabel.TextSize = 14
 
-
+-- Aimbot function
 local function GetClosestPlayer()
     local closestPlayer = nil
-    local shortestDistance = 300
+    local shortestDistance = 500 -- Tăng lên 500 để aim xa hơn
     local localTeam = LocalPlayer and LocalPlayer.Team
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
@@ -68,7 +68,7 @@ local function IsTargetVisible(target)
     if target and target.Character and target.Character:FindFirstChild("Head") then
         local origin = Camera.CFrame.Position
         local direction = (target.Character.Head.Position - origin).Unit
-        local ray = Ray.new(origin, direction * 300)
+        local ray = Ray.new(origin, direction * 500) -- Tăng raycast lên 500
         local hit, position = Workspace:FindPartOnRayWithIgnoreList(ray, {LocalPlayer.Character, Camera})
         return hit == nil or hit:IsDescendantOf(target.Character)
     end
@@ -78,7 +78,7 @@ end
 local function AimAtTarget()
     if AimbotEnabled and Target and Target.Character and Target.Character:FindFirstChild("Head") and IsTargetVisible(Target) then
         local targetPos = Target.Character.Head.Position
-        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos) 
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos) -- Aim tức thì
     end
 end
 
@@ -118,12 +118,13 @@ local function CheckTargetDeathOrSwitch()
     end
 end
 
+-- Highlight function
 local function AddHighlight(player)
     if player.Character and player.Character:FindFirstChild("Head") then
         local highlight = Instance.new("Highlight")
         highlight.Parent = player.Character
-        highlight.FillColor = Color3.fromRGB(255, 215, 0) 
-        highlight.OutlineColor = Color3.fromRGB(255, 165, 0) 
+        highlight.FillColor = Color3.fromRGB(255, 215, 0) -- Màu vàng nhạt
+        highlight.OutlineColor = Color3.fromRGB(255, 165, 0) -- Màu cam nhạt
         highlight.FillTransparency = 0.7
         highlight.OutlineTransparency = 0
         return highlight
@@ -141,6 +142,7 @@ local function RemoveHighlight(player)
     end
 end
 
+-- Toggle Aimbot
 ToggleButton.MouseButton1Click:Connect(function()
     AimbotEnabled = not AimbotEnabled
     if AimbotEnabled then
@@ -165,6 +167,7 @@ ToggleButton.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Run Aimbot
 RunService.RenderStepped:Connect(function()
     if AimbotEnabled then
         CheckTargetDeathOrSwitch()
@@ -178,3 +181,4 @@ RunService.RenderStepped:Connect(function()
         end
     end
 end)
+
