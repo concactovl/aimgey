@@ -17,8 +17,8 @@ local Workspace = game:GetService("Workspace")
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
     Name = "bat nat hub",
-    LoadingTitle = "Load Aimgay",
-    LoadingSubtitle = "uhuhuhuhuhuhuhuhuhuhuhuhuhhuhuhuhuhuhuhuhuhu",
+    LoadingTitle = "Loading Aimgay",
+    LoadingSubtitle = "huhuhuuhuhuhuhuhuhuhuuhuhuhuhuhuhuhuhuhuhuhuuhuhu",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "AimbotScript",
@@ -175,7 +175,7 @@ local function RemoveHighlight(player)
     end
 end
 
--- ESP function
+-- ESP function with orange outline
 local function CreateESP(player)
     if player.Character and not player.Character:FindFirstChild("ESP") then
         local billboard = Instance.new("BillboardGui")
@@ -202,6 +202,16 @@ local function CreateESP(player)
         healthLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
         healthLabel.TextSize = 12
 
+        local outline = Instance.new("BoxHandleAdornment")
+        outline.Name = "ESPOutline"
+        outline.Parent = player.Character
+        outline.Adornee = player.Character:FindFirstChild("HumanoidRootPart")
+        outline.Size = player.Character:FindFirstChild("HumanoidRootPart").Size + Vector3.new(0.2, 0.2, 0.2)
+        outline.Transparency = 0.7
+        outline.Color3 = Color3.fromRGB(255, 165, 0) -- Viền cam
+        outline.AlwaysOnTop = true
+        outline.ZIndex = 1
+
         local humanoid = player.Character:FindFirstChild("Humanoid")
         if humanoid then
             humanoid.HealthChanged:Connect(function(health)
@@ -214,12 +224,27 @@ local function CreateESP(player)
                 end
             end)
         end
+
+        player.Character.AncestryChanged:Connect(function()
+            if not player.Character or not player.Character.Parent then
+                billboard:Destroy()
+                outline:Destroy()
+            end
+        end)
+
+        player.CharacterAdded:Connect(function(char)
+            wait(0.1)
+            CreateESP(player)
+        end)
     end
 end
 
 local function RemoveESP(player)
     if player.Character and player.Character:FindFirstChild("ESP") then
         player.Character.ESP:Destroy()
+    end
+    if player.Character and player.Character:FindFirstChild("ESPOutline") then
+        player.Character.ESPOutline:Destroy()
     end
 end
 
