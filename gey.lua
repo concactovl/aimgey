@@ -5,6 +5,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local AimbotEnabled = false
 local Target = nil
 local ESPEnabled = false
+local IgnoreTeammates = true
 local VirtualUser = game:GetService("VirtualUser")
 local Camera = workspace.CurrentCamera
 local Players = game:GetService("Players")
@@ -16,8 +17,8 @@ local Workspace = game:GetService("Workspace")
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
     Name = "bat nat hub",
-    LoadingTitle = "Loading Aimbot Script",
-    LoadingSubtitle = "by hieuz",
+    LoadingTitle = "Load Aimgay",
+    LoadingSubtitle = "uhuhuhuhuhuhuhuhuhuhuhuhuhhuhuhuhuhuhuhuhuhu",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "AimbotScript",
@@ -25,8 +26,8 @@ local Window = Rayfield:CreateWindow({
     },
     Discord = {
         Enabled = false,
-        Invite = "noinvitelinkyetlol", -- Optional
-        RememberJoins = true -- Optional
+        Invite = "noinvitelinkyetlol",
+        RememberJoins = true
     }
 })
 
@@ -42,18 +43,24 @@ local AimbotToggle = AimbotTab:CreateToggle({
         if AimbotEnabled then
             Target = GetClosestPlayer()
             if Target and IsTargetVisible(Target) then
-                print("Aimbot bật, nhắm vào: " .. Target.Name)
             else
-                print("Aimbot bật, đang tìm target...")
             end
         else
             Target = nil
-            print("Aimbot tắt")
         end
     end
 })
 
 local StatusLabel = AimbotTab:CreateLabel("Trạng thái: Tắt")
+
+local IgnoreTeammatesToggle = AimbotTab:CreateToggle({
+    Name = "Không Aim Đồng Đội",
+    CurrentValue = true,
+    Flag = "IgnoreTeammatesToggle",
+    Callback = function(Value)
+        IgnoreTeammates = Value
+    end
+})
 
 -- ESP Tab
 local ESPTab = Window:CreateTab("ESP", 4483362458)
@@ -69,7 +76,6 @@ local ESPToggle = ESPTab:CreateToggle({
                 RemoveESP(player)
             end
         end
-        print("ESP " .. (ESPEnabled and "bật" or "tắt"))
     end
 })
 
@@ -82,7 +88,7 @@ local function GetClosestPlayer()
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
             local head = player.Character:FindFirstChild("Head")
             local playerTeam = player.Team
-            if (not localTeam or not playerTeam) or (localTeam and playerTeam and localTeam ~= playerTeam) then
+            if not IgnoreTeammates or (not localTeam or not playerTeam) or (localTeam and playerTeam and localTeam ~= playerTeam) then
                 local distance = (Camera.CFrame.Position - head.Position).Magnitude
                 if distance < shortestDistance then
                     shortestDistance = distance
@@ -108,7 +114,7 @@ end
 local function AimAtTarget()
     if AimbotEnabled and Target and Target.Character and Target.Character:FindFirstChild("Head") and IsTargetVisible(Target) then
         local targetPos = Target.Character.Head.Position
-        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos) -- Aim tức thì
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos)
     end
 end
 
@@ -118,7 +124,6 @@ local function CheckTargetDeathOrSwitch()
             local newTarget = GetClosestPlayer()
             if newTarget and IsTargetVisible(newTarget) then
                 Target = newTarget
-                print("Chuyển target sang: " .. Target.Name)
                 StatusLabel:Set("Trạng thái: Bật (Target: " .. Target.Name .. ")")
             else
                 Target = nil
@@ -131,7 +136,6 @@ local function CheckTargetDeathOrSwitch()
                 local newDistance = newTarget.Character and newTarget.Character:FindFirstChild("Head") and (Camera.CFrame.Position - newTarget.Character.Head.Position).Magnitude or math.huge
                 if newDistance < currentDistance and IsTargetVisible(newTarget) then
                     Target = newTarget
-                    print("Chuyển target sang player gần hơn: " .. Target.Name)
                     StatusLabel:Set("Trạng thái: Bật (Target: " .. Target.Name .. ")")
                 end
             end
@@ -140,7 +144,6 @@ local function CheckTargetDeathOrSwitch()
         local newTarget = GetClosestPlayer()
         if newTarget and IsTargetVisible(newTarget) then
             Target = newTarget
-            print("Tìm thấy target mới: " .. Target.Name)
             StatusLabel:Set("Trạng thái: Bật (Target: " .. Target.Name .. ")")
         else
             StatusLabel:Set("Trạng thái: Đang tìm target...")
@@ -153,8 +156,8 @@ local function AddHighlight(player)
     if player.Character and player.Character:FindFirstChild("Head") then
         local highlight = Instance.new("Highlight")
         highlight.Parent = player.Character
-        highlight.FillColor = Color3.fromRGB(255, 215, 0) -- Màu vàng nhạt
-        highlight.OutlineColor = Color3.fromRGB(255, 165, 0) -- Màu cam nhạt
+        highlight.FillColor = Color3.fromRGB(255, 215, 0)
+        highlight.OutlineColor = Color3.fromRGB(255, 165, 0)
         highlight.FillTransparency = 0.7
         highlight.OutlineTransparency = 0
         return highlight
