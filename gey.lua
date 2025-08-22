@@ -116,7 +116,7 @@ local OrbitSpeedSlider = OrbitTab:CreateSlider({
 
 local OrbitDistanceSlider = OrbitTab:CreateSlider({
     Name = "Khoảng Cách",
-    Range = {1.0, 50.0}, -- Increased max distance to 50.0
+    Range = {1.0, 50.0},
     Increment = 0.5,
     Suffix = "units",
     CurrentValue = 5.0,
@@ -153,8 +153,8 @@ end
 function AimAtTarget()
     if Target and Target.Character and Target.Character:FindFirstChild("Head") then
         local headPos = Target.Character.Head.Position
-        VirtualUser:CaptureController()
-        Mouse.Target = Vector3.new(headPos.X, headPos.Y, headPos.Z)
+        local cameraCFrame = CFrame.new(Camera.CFrame.Position, headPos)
+        Camera.CFrame = cameraCFrame
     end
 end
 
@@ -215,22 +215,28 @@ end
 -- Orbit Functions
 local function TeleportToTarget()
     if OrbitTarget and OrbitTarget.Character and OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = OrbitTarget.Character.HumanoidRootPart.CFrame
+        local targetPos = OrbitTarget.Character.HumanoidRootPart.Position
+        local offset = Vector3.new(0, 0, 10) -- Tăng khoảng cách teleport lên 10 units
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetPos + offset)
     end
 end
 
 local function UpdateOrbit()
-    if OrbitEnabled and OrbitTarget and OrbitTarget.Character and OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
-        local targetPos = OrbitTarget.Character.HumanoidRootPart.Position
-        OrbitAngle += OrbitSpeed
-        local newPos = targetPos + Vector3.new(math.cos(OrbitAngle) * OrbitDistance, 0, math.sin(OrbitAngle) * OrbitDistance)
-        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(newPos, targetPos)
-        -- Check if target is dead, switch to new target
-        if OrbitTarget.Character:FindFirstChild("Humanoid") and OrbitTarget.Character.Humanoid.Health <= 0 then
-            OrbitTarget = GetClosestPlayer()
-            if OrbitTarget then
+    if OrbitEnabled then
+        if not OrbitTarget or not OrbitTarget.Character or not OrbitTarget.Character:FindFirstChild("HumanoidRootPart") or
+           (OrbitTarget.Character:FindFirstChild("Humanoid") and OrbitTarget.Character.Humanoid.Health <= 0) then
+            local newOrbitTarget = GetClosestPlayer()
+            if newOrbitTarget and newOrbitTarget ~= OrbitTarget then
+                OrbitTarget = newOrbitTarget
                 TeleportToTarget()
+                OrbitAngle = 0.0
             end
+        end
+        if OrbitTarget and OrbitTarget.Character and OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPos = OrbitTarget.Character.HumanoidRootPart.Position
+            OrbitAngle += OrbitSpeed
+            local newPos = targetPos + Vector3.new(math.cos(OrbitAngle) * OrbitDistance, 0, math.sin(OrbitAngle) * OrbitDistance)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(newPos, targetPos)
         end
     end
 end
@@ -257,6 +263,3 @@ RunService.RenderStepped:Connect(function()
         UpdateOrbit()
     end
 end)
-
--- Debug
-print("Aimbot by Bé Iuu đã chạy xong! 🥰")
