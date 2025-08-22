@@ -21,7 +21,7 @@ local Workspace = game:GetService("Workspace")
 
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
-    Name = "Aimbot by Bé Iuu 🥰",
+    Name = "tung tung tung sahur",
     LoadingTitle = "Loading Aimbot Script",
     LoadingSubtitle = "by xAI",
     ConfigurationSaving = {
