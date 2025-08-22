@@ -21,9 +21,9 @@ local Workspace = game:GetService("Workspace")
 
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
-    Name = "aimgay",
+    Name = "Aimbot by Bé Iuu 🥰",
     LoadingTitle = "Loading Aimbot Script",
-    LoadingSubtitle = "hieudz",
+    LoadingSubtitle = "by xAI",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "AimbotScript",
@@ -49,6 +49,7 @@ local AimbotToggle = AimbotTab:CreateToggle({
             Target = GetClosestPlayer()
         else
             Target = nil
+            RemoveHighlight(Target)
         end
     end
 })
@@ -115,7 +116,7 @@ local OrbitSpeedSlider = OrbitTab:CreateSlider({
 
 local OrbitDistanceSlider = OrbitTab:CreateSlider({
     Name = "Khoảng Cách",
-    Range = {1.0, 20.0},
+    Range = {1.0, 50.0}, -- Increased max distance to 50.0
     Increment = 0.5,
     Suffix = "units",
     CurrentValue = 5.0,
@@ -143,7 +144,7 @@ function GetClosestPlayer()
 end
 
 function IsTargetVisible(target)
-    if not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then return false end
+    if not target or not target.Character or not target.Character:FindFirstChild("HumanoidRootPart") then return false end
     local ray = Ray.new(Camera.CFrame.Position, (target.Character.HumanoidRootPart.Position - Camera.CFrame.Position).Unit * 500)
     local hit, pos = Workspace:FindPartOnRayWithIgnoreList(ray, {LocalPlayer.Character})
     return hit == nil or hit:IsDescendantOf(target.Character)
@@ -164,7 +165,7 @@ function CheckTargetDeathOrSwitch()
 end
 
 function AddHighlight(player)
-    if player.Character and not player.Character:FindFirstChild("Highlight") then
+    if player and player.Character and not player.Character:FindFirstChild("Highlight") then
         local highlight = Instance.new("Highlight")
         highlight.Parent = player.Character
         highlight.FillColor = Color3.new(1, 0, 0)
@@ -173,7 +174,7 @@ function AddHighlight(player)
 end
 
 function RemoveHighlight(player)
-    if player.Character and player.Character:FindFirstChild("Highlight") then
+    if player and player.Character and player.Character:FindFirstChild("Highlight") then
         player.Character.Highlight:Destroy()
     end
 end
@@ -234,17 +235,19 @@ local function UpdateOrbit()
     end
 end
 
--- Run Aimbot, ESP, and Orbit
+-- Run Aimbot, ESP, and Orbit with separate checks
 RunService.RenderStepped:Connect(function()
     if AimbotEnabled then
-        CheckTargetDeathOrSwitch()
+        local newTarget = GetClosestPlayer()
+        if newTarget and (not Target or Target.Character.Humanoid.Health <= 0) then
+            Target = newTarget
+        end
         if Target and Target.Character and Target.Character:FindFirstChild("Head") and IsTargetVisible(Target) then
             AimAtTarget()
             AddHighlight(Target)
         else
-            if Target then
-                RemoveHighlight(Target)
-            end
+            RemoveHighlight(Target)
+            Target = nil
         end
     end
     if ESPEnabled then
@@ -254,3 +257,6 @@ RunService.RenderStepped:Connect(function()
         UpdateOrbit()
     end
 end)
+
+-- Debug
+print("Aimbot by Bé Iuu đã chạy xong! 🥰")
