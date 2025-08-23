@@ -23,7 +23,7 @@ local Workspace = game:GetService("Workspace")
 
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
-    Name = "Aimbot by Bé Iuu 🥰",
+    Name = "gayshit",
     LoadingTitle = "Loading Aimbot Script",
     LoadingSubtitle = "by xAI",
     ConfigurationSaving = {
