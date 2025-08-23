@@ -21,8 +21,8 @@ local Workspace = game:GetService("Workspace")
 
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
-    Name = "memaybeo",
-    LoadingTitle = "Loading Aimbot Script",
+    Name = "Aim rác",
+    LoadingTitle = "memaybeo",
     LoadingSubtitle = "🥵",
     ConfigurationSaving = {
         Enabled = true,
@@ -59,7 +59,7 @@ local AimbotToggle = AimbotTab:CreateToggle({
 local StatusLabel = AimbotTab:CreateLabel("Trạng thái: Tắt")
 
 local IgnoreTeammatesToggle = AimbotTab:CreateToggle({
-    Name = "Không Aim Đồng Đội",
+    Name = "đéo aim ng chung team",
     CurrentValue = true,
     Flag = "IgnoreTeammatesToggle",
     Callback = function(Value)
