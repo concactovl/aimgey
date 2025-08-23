@@ -21,9 +21,9 @@ local Workspace = game:GetService("Workspace")
 
 -- Create Rayfield Window
 local Window = Rayfield:CreateWindow({
-    Name = "Aim rác",
-    LoadingTitle = "memaybeo",
-    LoadingSubtitle = "🥵",
+    Name = "aim rác",
+    LoadingTitle = "🥵🥵🥵🥵🥵🥵🥵",
+    LoadingSubtitle = "cumcum",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "AimbotScript",
@@ -59,7 +59,7 @@ local AimbotToggle = AimbotTab:CreateToggle({
 local StatusLabel = AimbotTab:CreateLabel("Trạng thái: Tắt")
 
 local IgnoreTeammatesToggle = AimbotTab:CreateToggle({
-    Name = "đéo aim ng chung team",
+    Name = "Không Aim Đồng Đội",
     CurrentValue = true,
     Flag = "IgnoreTeammatesToggle",
     Callback = function(Value)
@@ -137,7 +137,7 @@ local function GetClosestPlayer()
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
             local head = player.Character:FindFirstChild("Head")
             local playerTeam = player.Team
-            if not IgnoreTeammates or (not localTeam or not playerTeam) or (localTeam and playerTeam and localTeam ~= playerTeam) then
+            if not (IgnoreTeammates and localTeam and playerTeam and localTeam == playerTeam) then
                 local distance = (Camera.CFrame.Position - head.Position).Magnitude
                 if distance < shortestDistance then
                     shortestDistance = distance
@@ -324,20 +324,33 @@ end
 
 local function UpdateOrbit()
     if OrbitEnabled then
-        if not OrbitTarget or not OrbitTarget.Character or not OrbitTarget.Character:FindFirstChild("HumanoidRootPart") or
-           (OrbitTarget.Character:FindFirstChild("Humanoid") and OrbitTarget.Character.Humanoid.Health <= 0) then
+        if OrbitTarget and OrbitTarget.Character then
+            local humanoid = OrbitTarget.Character:FindFirstChild("Humanoid")
+            local humanoidRootPart = OrbitTarget.Character:FindFirstChild("HumanoidRootPart")
+            -- Kiểm tra knockdown/chết: mất Humanoid, HumanoidRootPart, hoặc vị trí dưới -10 (xuống đất)
+            if not humanoid or not humanoidRootPart or (humanoid and humanoid.Health <= 0) or
+               (humanoidRootPart and humanoidRootPart.Position.Y < -10) then
+                OrbitTarget = nil -- Reset target
+                local newOrbitTarget = GetClosestPlayer()
+                if newOrbitTarget then
+                    OrbitTarget = newOrbitTarget
+                    TeleportToTarget()
+                    OrbitAngle = 0.0
+                end
+            end
+            if OrbitTarget and OrbitTarget.Character and OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
+                local targetPos = OrbitTarget.Character.HumanoidRootPart.Position
+                OrbitAngle += OrbitSpeed
+                local newPos = targetPos + Vector3.new(math.cos(OrbitAngle) * OrbitDistance, 0, math.sin(OrbitAngle) * OrbitDistance)
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(newPos, targetPos)
+            end
+        else
             local newOrbitTarget = GetClosestPlayer()
-            if newOrbitTarget and newOrbitTarget ~= OrbitTarget then
+            if newOrbitTarget then
                 OrbitTarget = newOrbitTarget
                 TeleportToTarget()
                 OrbitAngle = 0.0
             end
-        end
-        if OrbitTarget and OrbitTarget.Character and OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
-            local targetPos = OrbitTarget.Character.HumanoidRootPart.Position
-            OrbitAngle += OrbitSpeed
-            local newPos = targetPos + Vector3.new(math.cos(OrbitAngle) * OrbitDistance, 0, math.sin(OrbitAngle) * OrbitDistance)
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(newPos, targetPos)
         end
     end
 end
