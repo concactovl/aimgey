@@ -38,7 +38,7 @@ local function teleportAndFloat()
                 tween:Play()
                 LocalPlayer.Character.HumanoidRootPart.Anchored = true
                 tween.Completed:Wait() -- Chờ tween hoàn thành
-                wait(2) -- Đợi 2 giây
+                wait(1) -- Đợi 2 giây
                 LocalPlayer.Character.HumanoidRootPart.Anchored = false
                 index = index % #coordinates + 1 -- Chuyển sang tọa độ tiếp theo
                 if index == 1 and LocalPlayer.Character then -- Đã qua tọa độ cuối
