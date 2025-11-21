@@ -14,7 +14,7 @@ local ESPs = {}  -- Lưu ESP của từng người
 local Window = Rayfield:CreateWindow({
     Name = "chó chết hub",
     LoadingTitle = "Đang load script chó sài...",
-    LoadingSubtitle = "by Grok yêu bé nhất"
+    LoadingSubtitle = "me may beo 😂😂😂😂😂😂😂😂😂😂"
 })
 
 local MainTab = Window:CreateTab("Main")
