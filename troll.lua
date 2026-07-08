@@ -28,8 +28,8 @@ if not success then targetParent = LP:WaitForChild("PlayerGui") end
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 
 local Window = Fluent:CreateWindow({
-    Title = "Lava Carry & Throw",
-    SubTitle = "Mobile Sticky Lock",
+    Title = "troll hug tower 3",
+    SubTitle = "lo vuong",
     TabWidth = 120,
     Size = UDim2.fromOffset(460, 270),
     Acrylic = false, 
@@ -152,9 +152,9 @@ local StatusParagraph = Tabs.Main:AddParagraph({
 })
 
 Tabs.Main:AddInput("NameInput", {
-    Title = "🔍 Nhập Tên Để Khóa Cứng Mục Tiêu",
+    Title = "nhập name để ghim ai đó",
     Default = "",
-    Placeholder = "Nhập tên (ví dụ: boyzz) rồi bấm Enter...",
+    Placeholder = "",
     Numeric = false,
     Finished = true,
     Callback = function(Value)
