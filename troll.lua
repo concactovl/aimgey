@@ -14,7 +14,7 @@ local Event = RS:WaitForChild("CarryAndThrow")
 
 local BEHIND_OFFSET = 1
 local STEP_DELAY    = 0.2
-local SAFE_POS      = Vector3.new(-100, -309, -8)
+local SAFE_POS      = Vector3.new(-19, -345, -99)
 
 local enabled = false
 local selectedPlayer = nil 
